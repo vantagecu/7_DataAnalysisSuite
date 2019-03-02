@@ -106,11 +106,11 @@ done = 0;
 
 while ~done
     
-    answer = questdlg( 'Data Meet Requirement?', '', ...
-        'Good Enough', '>_<', 'Good Enough' );
+    answer = questdlg( 'Would you like to remove data?', '', ...
+        'Yes', 'No', 'No' );
     
     switch answer
-        case '>_<'
+        case 'Yes'
             
             f_Width = f.Position(3) - f.Position(1) + 1;
             f_Height = f.Position(4) - f.Position(2) + 1;
@@ -199,8 +199,8 @@ while ~done
             end
             
             answer = questdlg( 'What should be deleted?', ...
-                'DELETE POINT', 'Everything Right', 'Everything Left', ...
-                'Just This', 'Just This' );
+                'DELETE POINT', 'Everything Left', 'Just This', ...
+                'Everything Right', 'Just This' );
             
             delete(p1)
             delete(px)
@@ -288,7 +288,7 @@ while ~done
             
             linkaxes( [ ax, ay, az ], 'x' )
             
-        case 'Good Enough'
+        case 'No'
             
             done = 1;
             
