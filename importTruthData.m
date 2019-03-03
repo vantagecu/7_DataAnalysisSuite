@@ -1,50 +1,69 @@
-% clearvars;
-% close all;
-% clc;
+function [ t, p, h, k ] = importTruthData( filename, should_edit )
 
-done = 0;
-
-% path = './Data/';
-% filename = '550.txt.';
-
-while ~done
+if nargin < 2
     
-    type = questdlg( 'What type of test?', '', 'Modular', '100m', ...
-        'Modular' );
+    should_edit = 0;
     
-    switch type
-        case 'Modular'
-            
-            [ filename, path ] = uigetfile( '*.csv' );
-            
-        case '100m'
-            
-            [ filename, path ] = uigetfile( '*.txt' );
-            
-        otherwise
-            
+end
+
+if ~nargin
+    
+    done = 0;
+    
+    while ~done
+    
+        type = questdlg( 'What type of test?', '', 'Modular', '100m', ...
+            'Modular' );
+
+        switch type
+            case 'Modular'
+
+                [ filename, path ] = uigetfile( '*.csv' );
+
+            case '100m'
+
+                [ filename, path ] = uigetfile( '*.txt' );
+
+            otherwise
+
+                return
+
+        end
+
+        if ~path
+
             return
-            
+
+        end
+
+        answer = questdlg( [ 'Is ''', filename, ''' correct?' ], ...
+            'GPS CHECK', 'Yes', 'No', 'Cancel', 'Yes' );
+
+        switch answer
+            case 'Yes'
+
+                done = 1;
+
+            case 'Cancel'
+
+                return
+
+        end
+
     end
     
-    if ~path
-        
-        return
-        
-    end
+else
     
-    answer = questdlg( [ 'Is ''', filename, ''' correct?' ], ...
-        'GPS CHECK', 'Yes', 'No', 'Cancel', 'Yes' );
+    path = '';
     
-    switch answer
-        case 'Yes'
-            
-            done = 1;
-            
-        case 'Cancel'
-            
-            return
-            
+    if contains( filename, '.csv' )
+        
+        type = 'Modular';
+        
+    elseif contains( filename, '.txt' )
+        
+        type = '100m';
+        
     end
     
 end
@@ -84,7 +103,7 @@ f = figure( 'MenuBar', 'none', 'ToolBar', 'figure', ...
 
 [ a1, ax, ay, az ] = plotPHK( t, p, h, k );
 
-done = 0;
+done = ~should_edit;
 
 while ~done
     
@@ -247,16 +266,6 @@ end
 f.CloseRequestFcn = 'closereq';
 close(f)
 
-switch type
-    case 'Modular'
-        
-        plotGPSData(t,p,h,k)
-        
-    case '100m'
-        
-        plotGPSData(t,p,h,k)
-        plotGPSData(t,u,v,w)
-        
 end
 
 function [ a1, ax, ay, az ] = plotPHK( t, p, h, k )
