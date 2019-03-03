@@ -9,11 +9,23 @@ done = 0;
 
 while ~done
     
-    msg = msgbox( 'Choose a GPS file.', 'GPS INPUT' );
+    type = questdlg( 'What type of test?', '', 'Modular', '100m', ...
+        'Modular' );
     
-    waitfor( msg )
-    
-    [ filename, path ] = uigetfile( '*.txt' );
+    switch type
+        case 'Modular'
+            
+            [ filename, path ] = uigetfile( '*.csv' );
+            
+        case '100m'
+            
+            [ filename, path ] = uigetfile( '*.txt' );
+            
+        otherwise
+            
+            return
+            
+    end
     
     if ~path
         
@@ -37,14 +49,24 @@ while ~done
     
 end
 
-[ t, x, y, z, u, v, w ] = importTrimbleData( [ path, filename ] );
+switch type
+    case 'Modular'
+        
+        [ t, x, y, z ] = importVICONData( [ path, filename ] );
+        
+    case '100m'
+        
+        [ t, x, y, z, u, v, w ] = importTrimbleData( [ path, filename ] );
+        
+end
 
 % Rotation onto principal, horizontal, vertical axes
-% Principal axis is the one which minimizes mean(H) and mean(Z), I.E. it is
-% the axis that points along the average position
-% Horizontal is the axis perpendicular to Principal with no z component
-% Vertical is the remaining axis perpendiculat to both Principal and
-% Horizontal
+% Principal axis is the one which minimizes mean(H) and mean(Z),
+% I.E. it is the axis that points along the average position
+% Horizontal is the axis perpendicular to Principal with no z
+% component
+% Vertical is the remaining axis perpendiculat to both Principal
+% and Horizontal
 p = [x,y,0.*z];
 p = mean(p);
 p = p / norm(p);
@@ -57,50 +79,10 @@ k = dot( [x,y,z], k.*ones( size( [x,y,z] ) ), 2 );
 
 f = figure( 'MenuBar', 'none', 'ToolBar', 'figure', ...
     'DockControls', 'off', 'WindowState', 'maximized', ...
-    'Name', 'GPS DATA', 'NumberTitle', 'off', ...
+    'Name', 'TRUTH DATA', 'NumberTitle', 'off', ...
     'CloseRequestFcn', @my_closereq );
 
-a1 = subplot(1,2,1);
-% this will hold a 3D map of the GPS PHK Data
-hold on
-colormap(fliplr(jet))
-scatter3( p, h, k, 1, t )
-a1.PlotBoxAspectRatioMode = 'manual';
-a1.DataAspectRatioMode = 'manual';
-grid on
-xlabel( 'Principal Position [m]' )
-ylabel( 'Horizontal Position [m]' )
-zlabel( 'Zenith Position [m]' )
-view( [45,45] )
-
-ax = subplot(3,2,2);
-% this will hold an P vs T graph
-hold on
-scatter3( t, p, 0.*t, 1, t )
-grid on
-xlabel( 'Time [s]' )
-ylabel( 'Principal Position [m]' )
-view( [0,90] )
-
-ay = subplot(3,2,4);
-% this will hold an H vs T graph
-hold on
-scatter3( t, h, 0.*t, 1, t )
-grid on
-xlabel( 'Time [s]' )
-ylabel( 'Horizontal Position [m]' )
-view( [0,90] )
-
-az = subplot(3,2,6);
-% this will hold an K vs T graph
-hold on
-scatter3( t, k, 0.*t, 1, t )
-grid on
-xlabel( 'Time [s]' )
-ylabel( 'Zenith Position [m]' )
-view( [0,90] )
-
-linkaxes( [ ax, ay, az ], 'x' )
+[ a1, ax, ay, az ] = plotPHK( t, p, h, k );
 
 done = 0;
 
@@ -246,47 +228,7 @@ while ~done
             
             clf
             
-            a1 = subplot(1,2,1);
-            % this will hold a 3D map of the GPS PHK Data
-            hold on
-            colormap(fliplr(jet))
-            scatter3( p, h, k, 1, t )
-            a1.PlotBoxAspectRatioMode = 'manual';
-            a1.DataAspectRatioMode = 'manual';
-            grid on
-            xlabel( 'Principal Position [m]' )
-            ylabel( 'Horizontal Position [m]' )
-            zlabel( 'Zenith Position [m]' )
-            view( [45,45] )
-            
-            ax = subplot(3,2,2);
-            % this will hold an P vs T graph
-            hold on
-            scatter3( t, p, 0.*t, 1, t )
-            grid on
-            xlabel( 'Time [s]' )
-            ylabel( 'Principal Position [m]' )
-            view( [0,90] )
-            
-            ay = subplot(3,2,4);
-            % this will hold an H vs T graph
-            hold on
-            scatter3( t, h, 0.*t, 1, t )
-            grid on
-            xlabel( 'Time [s]' )
-            ylabel( 'Horizontal Position [m]' )
-            view( [0,90] )
-            
-            az = subplot(3,2,6);
-            % this will hold an K vs T graph
-            hold on
-            scatter3( t, k, 0.*t, 1, t )
-            grid on
-            xlabel( 'Time [s]' )
-            ylabel( 'Zenith Position [m]' )
-            view( [0,90] )
-            
-            linkaxes( [ ax, ay, az ], 'x' )
+            [ a1, ax, ay, az ] = plotPHK( t, p, h, k );
             
         case 'No'
             
@@ -299,21 +241,63 @@ end
 f.CloseRequestFcn = 'closereq';
 close(f)
 
-plotGPSData(t,p,h,k)
-plotGPSData(t,u,v,w)
+switch type
+    case 'Modular'
+        
+        plotGPSData(t,p,h,k)
+        
+    case '100m'
+        
+        plotGPSData(t,p,h,k)
+        plotGPSData(t,u,v,w)
+        
+end
 
-
-
-
-
-
-
-
-
-
-
-
-
+function [ a1, ax, ay, az ] = plotPHK( t, p, h, k )
+    
+    a1 = subplot(1,2,1);
+    % this will hold a 3D map of the GPS PHK Data
+    hold on
+    colormap(fliplr(jet))
+    scatter3( p, h, k, 1, t )
+    a1.PlotBoxAspectRatioMode = 'manual';
+    a1.DataAspectRatioMode = 'manual';
+    grid on
+    xlabel( 'Principal Position [m]' )
+    ylabel( 'Horizontal Position [m]' )
+    zlabel( 'Zenith Position [m]' )
+    view( [45,45] )
+    
+    ax = subplot(3,2,2);
+    % this will hold an P vs T graph
+    hold on
+    scatter3( t, p, 0.*t, 1, t )
+    grid on
+    xlabel( 'Time [s]' )
+    ylabel( 'Principal Position [m]' )
+    view( [0,90] )
+    
+    ay = subplot(3,2,4);
+    % this will hold an H vs T graph
+    hold on
+    scatter3( t, h, 0.*t, 1, t )
+    grid on
+    xlabel( 'Time [s]' )
+    ylabel( 'Horizontal Position [m]' )
+    view( [0,90] )
+    
+    az = subplot(3,2,6);
+    % this will hold an K vs T graph
+    hold on
+    scatter3( t, k, 0.*t, 1, t )
+    grid on
+    xlabel( 'Time [s]' )
+    ylabel( 'Zenith Position [m]' )
+    view( [0,90] )
+    
+    linkaxes( [ ax, ay, az ], 'x' )
+    
+end
 
 function my_closereq( src, ~ )
     % Close request function 

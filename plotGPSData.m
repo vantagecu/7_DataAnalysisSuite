@@ -1,4 +1,4 @@
-function plotGPSData( t, x, y, z )
+function plotGPSData( t, p, h, k )
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Author: Marshall Herr
 %%%
@@ -22,45 +22,29 @@ function plotGPSData( t, x, y, z )
 % Formatting
 numBoxes = 100;
 
-% Rotation onto principal, horizontal, vertical axes
-% Principal axis is the one which minimizes mean(H) and mean(Z), I.E. it is
-% the axis that points along the average position
-% Horizontal is the axis perpendicular to Principal with no z component
-% Vertical is the remaining axis perpendiculat to both Principal and
-% Horizontal
-u = [x,y,0.*z];
-p = mean(u);
-p = p / norm(p);
-h = cross( [0,0,1], p );
-k = cross( p, h );
-
-P = dot( [x,y,z], p.*ones( size( [x,y,z] ) ), 2 );
-H = dot( [x,y,z], h.*ones( size( [x,y,z] ) ), 2 );
-K = dot( [x,y,z], k.*ones( size( [x,y,z] ) ), 2 );
-
 % Standard Deviations and Means
-sP = std(P);
-mP = mean(P);
-sH = std(H);
-mH = mean(H);
-sK = std(K);
-mK = mean(K);
+sP = std(p);
+mP = mean(p);
+sH = std(h);
+mH = mean(h);
+sK = std(k);
+mK = mean(k);
 
 % Plotting
 figure;
 
 ax = subplot(3,2,1);
-plot(t,P)
+plot(t,p)
 hold on
-plot(t,0.*P+mP,'-g')
-plot(t,0.*P+mP+sP,'-r')
-plot(t,0.*P+mP-sP,'-r')
+plot(t,0.*p+mP,'-g')
+plot(t,0.*p+mP+sP,'-r')
+plot(t,0.*p+mP-sP,'-r')
 ylabel('Principal Position [m]')
 title('Position VS Time')
 axis tight
 
 subplot(3,2,2);
-histfit(P,numBoxes)
+histfit(p,numBoxes)
 y_lim = get(gca,'YLim');
 hold on
 plot([mP,mP],[y_lim(1),y_lim(2)],'-g')
@@ -71,16 +55,16 @@ title('Position Histograms')
 ylim(y_lim)
 
 ay = subplot(3,2,3);
-plot(t,H)
+plot(t,h)
 hold on
-plot(t,0.*H+mH,'-g')
-plot(t,0.*H+mH+sH,'-r')
-plot(t,0.*H+mH-sH,'-r')
+plot(t,0.*h+mH,'-g')
+plot(t,0.*h+mH+sH,'-r')
+plot(t,0.*h+mH-sH,'-r')
 ylabel('Horizontal Position [m]')
 axis tight
 
 subplot(3,2,4);
-histfit(H,numBoxes)
+histfit(h,numBoxes)
 y_lim = get(gca,'YLim');
 hold on
 plot([mH,mH],[y_lim(1),y_lim(2)],'-g')
@@ -90,17 +74,17 @@ ylabel('Horizontal Position Counts')
 ylim(y_lim)
 
 az = subplot(3,2,5);
-plot(t,K)
+plot(t,k)
 hold on
-plot(t,0.*K+mK,'-g')
-plot(t,0.*K+mK+sK,'-r')
-plot(t,0.*K+mK-sK,'-r')
+plot(t,0.*k+mK,'-g')
+plot(t,0.*k+mK+sK,'-r')
+plot(t,0.*k+mK-sK,'-r')
 ylabel('Vertical Position [m]')
 xlabel('Time [s]')
 axis tight
 
 subplot(3,2,6);
-histfit(K,numBoxes)
+histfit(k,numBoxes)
 y_lim = get(gca,'YLim');
 hold on
 plot([mK,mK],[y_lim(1),y_lim(2)],'-g')
