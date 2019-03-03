@@ -1,4 +1,4 @@
-function [ t, p, h, k ] = importTruthData( filename, should_edit )
+function [ t, x, y, z ] = importTruthData( filename, should_edit )
 
 if nargin < 2
     
@@ -79,29 +79,12 @@ switch type
         
 end
 
-% Rotation onto principal, horizontal, vertical axes
-% Principal axis is the one which minimizes mean(H) and mean(Z),
-% I.E. it is the axis that points along the average position
-% Horizontal is the axis perpendicular to Principal with no z
-% component
-% Vertical is the remaining axis perpendiculat to both Principal
-% and Horizontal
-p = [x,y,0.*z];
-p = mean(p);
-p = p / norm(p);
-h = cross( [0,0,1], p );
-k = cross( p, h );
-
-p = dot( [x,y,z], p.*ones( size( [x,y,z] ) ), 2 );
-h = dot( [x,y,z], h.*ones( size( [x,y,z] ) ), 2 );
-k = dot( [x,y,z], k.*ones( size( [x,y,z] ) ), 2 );
-
 f = figure( 'MenuBar', 'none', 'ToolBar', 'figure', ...
     'DockControls', 'off', 'WindowState', 'maximized', ...
     'Name', 'TRUTH DATA', 'NumberTitle', 'off', ...
     'CloseRequestFcn', @my_closereq );
 
-[ a1, ax, ay, az ] = plotPHK( t, p, h, k );
+[ a1, ax, ay, az ] = plotPHK( t, x, y, z );
 
 done = ~should_edit;
 
@@ -183,10 +166,10 @@ while ~done
             
             idx = dist == min(dist);
             
-            p1 = plot3( a1, p(idx), h(idx), k(idx), 'xm' );
-            px = plot3( ax, t(idx), p(idx), 0.*t(idx), 'xm' );
-            py = plot3( ay, t(idx), h(idx), 0.*t(idx), 'xm' );
-            pz = plot3( az, t(idx), k(idx), 0.*t(idx), 'xm' );
+            p1 = plot3( a1, x(idx), y(idx), z(idx), 'xm' );
+            px = plot3( ax, t(idx), x(idx), 0.*t(idx), 'xm' );
+            py = plot3( ay, t(idx), y(idx), 0.*t(idx), 'xm' );
+            pz = plot3( az, t(idx), z(idx), 0.*t(idx), 'xm' );
             
             answer = questdlg( 'Is this the correct data point?', ...
                 'SELECTED POINT', 'Yes', 'No', 'Yes' );
@@ -212,9 +195,9 @@ while ~done
                 case 'Everything Right'
                     
                     t = t(1:find(idx));
-                    p = p(1:find(idx));
-                    h = h(1:find(idx));
-                    k = k(1:find(idx));
+                    x = x(1:find(idx));
+                    y = y(1:find(idx));
+                    z = z(1:find(idx));
                     if strcmpi(type,'100m')
                         u = u(1:find(idx));
                         v = v(1:find(idx));
@@ -224,9 +207,9 @@ while ~done
                 case 'Everything Left'
                     
                     t = t(find(idx):end);
-                    p = p(find(idx):end);
-                    h = h(find(idx):end);
-                    k = k(find(idx):end);
+                    x = x(find(idx):end);
+                    y = y(find(idx):end);
+                    z = z(find(idx):end);
                     if strcmpi(type,'100m')
                         u = u(find(idx):end);
                         v = v(find(idx):end);
@@ -236,9 +219,9 @@ while ~done
                 case 'Just This'
                     
                     t = t(~idx);
-                    p = p(~idx);
-                    h = h(~idx);
-                    k = k(~idx);
+                    x = x(~idx);
+                    y = y(~idx);
+                    z = z(~idx);
                     if strcmpi(type,'100m')
                         u = u(~idx);
                         v = v(~idx);
@@ -253,7 +236,7 @@ while ~done
             
             clf
             
-            [ a1, ax, ay, az ] = plotPHK( t, p, h, k );
+            [ a1, ax, ay, az ] = plotPHK( t, x, y, z );
             
         case 'No'
             
