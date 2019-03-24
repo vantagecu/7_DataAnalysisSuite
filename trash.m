@@ -61,7 +61,7 @@ ylabel( 'Error [cm]' )
 grid on
 grid minor
 
-saveMeSomeFigs(1,'./Figures/VICON_Error_characterization_1.pdf',gcf)
+saveMeSomeFigs(0,'./Figures/VICON_Error_characterization_1.pdf',gcf)
 
 figure;
 
@@ -79,7 +79,7 @@ ylabel( 'Error [cm]' )
 grid on
 grid minor
 
-saveMeSomeFigs(1,'./Figures/VICON_Error_characterization_2.pdf',gcf)
+saveMeSomeFigs(0,'./Figures/VICON_Error_characterization_2.pdf',gcf)
 
 figure;
 
@@ -107,7 +107,7 @@ ylabel( 'Random Error Standard Deviation [cm]' )
 grid on
 grid minor
 
-saveMeSomeFigs(1,'./Figures/VICON_Error_characterization_3.pdf',gcf)
+saveMeSomeFigs(0,'./Figures/VICON_Error_characterization_3.pdf',gcf)
 
 %% GPS Error Characterization
 [ ~, x, y, z ] = importTruthData( './Data/120C.txt' );
@@ -150,13 +150,13 @@ grid minor
 
 subplot(1,2,2)
 hold on
-histfit(z,100)
+histfit(z,15)
 xlabel( 'Zenith Distance [mm]' )
 ylabel( 'Counts' )
 grid on
 grid minor
 
-saveMeSomeFigs(1,'./Figures/GPS_Error_characterization_1.pdf',gcf)
+saveMeSomeFigs(0,'./Figures/GPS_Error_characterization_1.pdf',gcf)
 
 %% VICON Test Expected Data
 [ t, x, y, z ] = importTruthData( './Data/24Feb_Rack2_Test1.csv' );
@@ -198,7 +198,7 @@ colormap(fliplr(jet));
 grid on
 grid minor
 
-saveMeSomeFigs(1,'./Figures/VICON_Expected_Data_1.pdf',gcf)
+saveMeSomeFigs(0,'./Figures/VICON_Expected_Data_1.pdf',gcf)
 
 figure;
 
@@ -208,16 +208,16 @@ xlabel( 'Time [s]' )
 ylabel( 'Principal Velocity [m/s]' )
 
 subplot(1,3,2)
-histfit( 100.*gradient(h,t), 100 )
+histfit( 100.*gradient(h,t), 15 )
 xlabel( 'Horizontal Velocity [cm/s]' )
 ylabel( 'Counts' )
 
 subplot(1,3,3)
-histfit( 100.*gradient(k,t), 100 )
+histfit( 100.*gradient(k,t), 15 )
 xlabel( 'Vertical Velocity [cm/s]' )
 ylabel( 'Counts' )
 
-saveMeSomeFigs(1,'./Figures/VICON_Expected_Data_2.pdf',gcf)
+saveMeSomeFigs(0,'./Figures/VICON_Expected_Data_2.pdf',gcf)
 
 %% GPS Test Expected Data
 try load( 'GPSExpected.mat' )
@@ -262,7 +262,7 @@ grid on
 grid minor
 
 subplot(1,2,2)
-histfit(100.*h,100)
+histfit(100.*h,15)
 hold on
 plot( std(100.*h).*[1,1], [0,max(get(gca,'YLim'))], '-r', 'LineWidth', 2 )
 plot( -std(100.*h).*[1,1], [0,max(get(gca,'YLim'))], '-r', 'LineWidth', 2 )
@@ -271,7 +271,7 @@ ylabel( 'Counts' )
 grid on
 grid minor
 
-saveMeSomeFigs(1,'./Figures/GPS_Expected_Data_1.pdf',gcf)
+saveMeSomeFigs(0,'./Figures/GPS_Expected_Data_1.pdf',gcf)
 
 figure;
 
@@ -286,17 +286,17 @@ grid on
 grid minor
 
 subplot(1,3,2)
-histfit( 100.*gradient(h,t), 100 )
+histfit( 100.*gradient(h,t), 15 )
 xlabel( 'Horizontal Velocity [cm/s]' )
 ylabel( 'Counts' )
 grid on
 grid minor
 
 subplot(1,3,3)
-histfit( 100.*gradient(k,t), 100 )
+histfit( 100.*gradient(k,t), 15 )
 xlabel( 'Vertical Velocity [cm/s]' )
 ylabel( 'Counts' )
 grid on
 grid minor
 
-saveMeSomeFigs(1,'./Figures/GPS_Expected_Data_2.pdf',gcf)
+saveMeSomeFigs(0,'./Figures/GPS_Expected_Data_2.pdf',gcf)
