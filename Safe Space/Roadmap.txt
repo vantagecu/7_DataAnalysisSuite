@@ -8,17 +8,18 @@ Data will be stored in:
 
 Truthfile Format:
     jsonencode(truth):
-        truth: a 1 x n struct where each ith element corresponds to the ith time
-            truth(i).t the ith time
-            turh(i).cubesat1position (the name might need some "_"s to make josh happy)
-                this be a 3x1 vector
+        truth: a 1xN struct where each ith element corresponds to the ith
+               time and N is the number of CubeSats
+            truth(i).t: the ith time
+            truth(i).pos: this is a struct holds all N position vectors:
+                truth(i).pos.Cubesat_j: the 3x1 position vector [x;y;z] of
+                                        the jth CubeSat
 
 Options:
     > Import truth data:
-        - Select file
-        - Extract relevant data
-        - Data is saved to truth.json automagically
-        - Plot truth data
+        X Select file
+        X Extract relevant data
+        X Data is saved to truth.json automagically
     > Look at VANTAGE performance for this test
         - Probably plots of stuff. IDK yet
         - If VANTAGE not available plot truth by itself

@@ -6,11 +6,12 @@ while 1
 clearvars -except path
 
 list = { 'Import Truth Data', 'Plot Truth Data', 'Import Test Data', ...
-    'Plot Test Data', 'Correlate Multiple Tests' };
+    'Plot Test Data', 'Plot Test Performance', ...
+    'Correlate Multiple Tests' };
 answer = listdlg( 'PromptString', 'Choose Action', 'ListString', ...
     list, 'SelectionMode', 'Single' );
 
-% answer will be one of the following: 1,2,3,4,5,[]
+% answer will be one of the following: 1,2,3,4,5,6,[]
 % each number corresponds to the choice selected
 % [] indicates closed out or cancelled
 
@@ -21,7 +22,7 @@ end
 
 disp( [ list{answer}, ' selected.' ] )
 
-if answer == 5
+if answer == 6
     warning( 'Not supported yet.' )
     % probably redirect to some correlation function/wrapper
     % ehem... //TODO
@@ -53,6 +54,7 @@ truth_name = [ path, '/truth.json' ];
 % 2: Plot Truth Data
 % 3: Import Test Data
 % 4: Plot Test Data
+% 5: Plot Test Performance
 switch answer
     case 1
         % check for pre-expisting truth file
@@ -182,6 +184,9 @@ switch answer
         warning( 'Not supported yet.' )
         
     case 4
+        warning( 'Not supported yet.' )
+        
+    case 5
         warning( 'Not supported yet.' )
         
     otherwise

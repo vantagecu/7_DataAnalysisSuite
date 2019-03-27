@@ -7,10 +7,10 @@ Data will be stored in:
         > VANTAGEfile.jason
 
 Truthfile Format:
-    jsonencode:
-    truth: a 1 x n struct where each ith element corresponds to the ith time
-    truth(i).t the ith time
-    turh
+    jsonencode(truth):
+        truth: a 1 x n struct where each ith element corresponds to the ith time
+            truth(i).t: the ith time
+            turh(i).pos: 
 
 Options:
     > Import truth data:
