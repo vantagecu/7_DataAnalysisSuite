@@ -173,6 +173,11 @@ switch answer
         waitfor(f)
         disp( 'Plot Truth Data complete.' )
         
+        % It would probably behoove me to figure out a way of either
+        % labelling all nSat lines in this figure, plotting nSat figures,
+        % or something else to make looking at all nSat sats reasonably
+        % understandable.
+        
     case 3
         warning( 'Not supported yet.' )
         
