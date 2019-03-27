@@ -37,7 +37,6 @@ for i = 1 : length(r)
     
 end
 
-figure
 hold on
 p1 = surf( x, y1, 0.*x, 'FaceAlpha', 'flat', ...
     'AlphaDataMapping', 'scaled', 'AlphaData', c1, 'LineStyle', 'None' );

@@ -1,12 +1,38 @@
 function [ t, x, y, z ] = importTruthData( filename, should_edit )
 
+[ t, x, y, z ] = deal( [] );
+
 if nargin < 2
     
     should_edit = 1;
     
 end
 
-if ~nargin
+path = '';
+
+% this catches when a path is place of a filename
+edgeCase = 0;
+
+if nargin > 0
+    
+    if contains( filename, '.csv' )
+        
+        type = 'Modular';
+        
+    elseif contains( filename, '.txt' )
+        
+        type = '100m';
+        
+    else
+        
+        edgeCase = 1;
+        path = filename;
+        
+    end
+    
+end
+
+if ~nargin || edgeCase
     
     done = 0;
     
@@ -14,15 +40,18 @@ if ~nargin
     
         type = questdlg( 'What type of test?', '', 'Modular', '100m', ...
             'Modular' );
+        
+        m = msgbox( 'Select the truth data file.' );
+        waitfor(m)
 
         switch type
             case 'Modular'
 
-                [ filename, path ] = uigetfile( '*.csv' );
+                [ filename, path ] = uigetfile( [ path, '/*.csv' ] );
 
             case '100m'
 
-                [ filename, path ] = uigetfile( '*.txt' );
+                [ filename, path ] = uigetfile( [ path, '/*.txt' ] );
 
             otherwise
 
@@ -52,20 +81,6 @@ if ~nargin
 
     end
     
-else
-    
-    path = '';
-    
-    if contains( filename, '.csv' )
-        
-        type = 'Modular';
-        
-    elseif contains( filename, '.txt' )
-        
-        type = '100m';
-        
-    end
-    
 end
 
 switch type
@@ -76,6 +91,31 @@ switch type
     case '100m'
         
         [ t, x, y, z, u, v, w ] = importTrimbleData( [ path, filename ] );
+        
+        % Rotation onto principal, horizontal, vertical axes
+        % Principal axis is the one which minimizes mean(H) and mean(Z),
+        % I.E. it is the axis that points along the average position
+        % Horizontal is the axis perpendicular to Principal with no z
+        % component
+        % Vertical is the remaining axis perpendiculat to both Principal
+        % and Horizontal
+        p = [x-x(1),y-y(1),0.*z];
+        p = mean(p);
+        p = p / norm(p);
+        h = cross( [0,0,1], p );
+        k = cross( p, h );
+        
+        u = dot( [u,v,w], p.*ones( size( [u,v,w] ) ), 2 );
+        v = dot( [u,v,w], h.*ones( size( [u,v,w] ) ), 2 );
+        w = dot( [u,v,w], k.*ones( size( [u,v,w] ) ), 2 );
+        
+        p = dot( [x,y,z], p.*ones( size( [x,y,z] ) ), 2 );
+        h = dot( [x,y,z], h.*ones( size( [x,y,z] ) ), 2 );
+        k = dot( [x,y,z], k.*ones( size( [x,y,z] ) ), 2 );
+        
+        x = p;
+        y = h;
+        z = k;
         
 end
 
@@ -233,6 +273,32 @@ while ~done
                     continue
                     
             end
+            
+            % Rotation onto principal, horizontal, vertical axes
+            % Principal axis is the one which minimizes mean(H) and
+            % mean(Z), I.E. it is the axis that points along the average
+            % position
+            % Horizontal is the axis perpendicular to Principal with no z
+            % component
+            % Vertical is the remaining axis perpendiculat to both
+            % Principal and Horizontal
+            p = [x-x(1),y-y(1),0.*z];
+            p = mean(p);
+            p = p / norm(p);
+            h = cross( [0,0,1], p );
+            k = cross( p, h );
+            
+            u = dot( [u,v,w], p.*ones( size( [u,v,w] ) ), 2 );
+            v = dot( [u,v,w], h.*ones( size( [u,v,w] ) ), 2 );
+            w = dot( [u,v,w], k.*ones( size( [u,v,w] ) ), 2 );
+            
+            p = dot( [x,y,z], p.*ones( size( [x,y,z] ) ), 2 );
+            h = dot( [x,y,z], h.*ones( size( [x,y,z] ) ), 2 );
+            k = dot( [x,y,z], k.*ones( size( [x,y,z] ) ), 2 );
+            
+            x = p;
+            y = h;
+            z = k;
             
             clf
             

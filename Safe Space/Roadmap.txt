@@ -1,0 +1,27 @@
+Main file must be link to whole process.
+
+Data will be stored in:
+    > Test_Name
+        > GPSfile.txt
+        > truth.json
+        > VANTAGEfile.jason
+
+Truthfile Format:
+    jsonencode(truth):
+        truth: a 1 x n struct where each ith element corresponds to the ith time
+            truth(i).t the ith time
+            turh(i).cubesat1position (the name might need some "_"s to make josh happy)
+                this be a 3x1 vector
+
+Options:
+    > Import truth data:
+        - Select file
+        - Extract relevant data
+        - Data is saved to truth.json automagically
+        - Plot truth data
+    > Look at VANTAGE performance for this test
+        - Probably plots of stuff. IDK yet
+        - If VANTAGE not available plot truth by itself
+    > Correlate performance over several tests
+        - Select relevant folders (include "all" button)
+        - Do covariance analysis and make error plots
