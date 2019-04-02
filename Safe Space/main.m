@@ -5,8 +5,8 @@ while 1
 % Housekeeping
 clearvars -except path
 
-list = { 'Import Truth Data', 'Plot Truth Data', 'Import Test Data', ...
-    'Plot Test Data', 'Plot Test Performance', ...
+list = { 'Import Truth Data', 'Plot Truth Data', 'Import VANTAGE Data', ...
+    'Plot VANTAGE Data', 'Plot Test Performance', ...
     'Correlate Multiple Tests' };
 answer = listdlg( 'PromptString', 'Choose Action', 'ListString', ...
     list, 'SelectionMode', 'Single' );
@@ -52,8 +52,8 @@ truth_name = [ path, '/truth.json' ];
 % now is the time to separate out choices
 % 1: Import Truth Data
 % 2: Plot Truth Data
-% 3: Import Test Data
-% 4: Plot Test Data
+% 3: Import VANTAGE Data
+% 4: Plot VANTAGE Data
 % 5: Plot Test Performance
 switch answer
     case 1
@@ -75,7 +75,7 @@ switch answer
         end
         
         % import raw truth data
-        [ t, x, y, z ] = importTruthData( path );
+        [ t, x, y, z, date_str ] = importTruthData( path );
         
         % if import was cancelled
         if isempty(t)
@@ -84,8 +84,8 @@ switch answer
         end
         
         % import correction
-        if exist( [ path, 'correction.m' ], 'file' )
-            run( [ path, 'correction.m' ] )
+        if exist( [ path, '/corrections.m' ], 'file' )
+            run( [ path, '/corrections.m' ] )
             % this loads the data in correction.m:
             % a struct called "correction" with the fields:
             % - nSats: the number of CubeSats
@@ -131,14 +131,15 @@ switch answer
             truth(i).t = t(i);
             for j = 1 : correction.nSats
                 truth(i).pos.( [ 'CubeSat_', num2str(j) ] ) = ...
-                    [ x(i) + correction.x(j); y(i) + correction.y(j); ...
-                    z(i) + correction.z(j); ];
+                    [ -( y(i) + correction.y(j) ); ...
+                    -( z(i) + correction.z(j) ); ...
+                    x(i) + correction.x(j) ];
             end
         end
         
         % generate truth file
         fID = fopen( truth_name, 'w' );
-        jason = jsonencode( truth );
+        jason = jsonencode( { date_str, truth } );
         fprintf( fID, jason );
         fclose(fID);
         disp( 'Import Truth Data complete.' )
@@ -156,6 +157,8 @@ switch answer
         
         % extract truth data
         truth = jsondecode( fileread( truth_name ) );
+        date_str = truth{1};
+        truth = truth{2};
         % number of datapoints
         for i = 1 : length( truth )
             % number of CubeSats

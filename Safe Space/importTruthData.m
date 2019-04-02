@@ -1,6 +1,26 @@
-function [ t, x, y, z ] = importTruthData( filename, should_edit )
+function [ t, x, y, z, date_str ] = importTruthData( filename, should_edit )
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Author: Marshall Herr
+%%%
+%%% Purpose: Wrapper for importing truth data
+%%%
+%%% Inputs:
+%%%     - filename: The filename to load or a path to a folder containing
+%%%         the files of interest
+%%%     - should_edit: Should the data be edit-able?
+%%%
+%%% Outputs:
+%%%     - t: MST time vector w/ header:
+%%%         [ datenum, time past date vector (seconds) ]
+%%%     - x: X direction vector
+%%%     - y: Y direction vector
+%%%     - z: Z direction vector
+%%%
+%%% Date Created: I forgot to put it down
+%%% Last Editted: 31 March 2019
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[ t, x, y, z ] = deal( [] );
+[ t, x, y, z, date_str ] = deal( [] );
 
 if nargin < 2
     
@@ -66,7 +86,7 @@ if ~nargin || edgeCase
         end
 
         answer = questdlg( [ 'Is ''', filename, ''' correct?' ], ...
-            'GPS CHECK', 'Yes', 'No', 'Cancel', 'Yes' );
+            'FILE CHECK', 'Yes', 'No', 'Cancel', 'Yes' );
 
         switch answer
             case 'Yes'
@@ -296,9 +316,11 @@ while ~done
             h = dot( [x,y,z], h.*ones( size( [x,y,z] ) ), 2 );
             k = dot( [x,y,z], k.*ones( size( [x,y,z] ) ), 2 );
             
-            x = p;
-            y = h;
-            z = k;
+            if strcmpi( type, '100m' )
+                x = p;
+                y = h;
+                z = k;
+            end
             
             clf
             
@@ -314,6 +336,23 @@ end
 
 f.CloseRequestFcn = 'closereq';
 close(f)
+
+% Import the datestring
+if strcmpi( type, '100m' )
+    data = importdata( [ path, filename ] );
+    data = data{2}(1:24);
+    if length( num2str( mod( str2double( data(13:14) ) - 6, 24 ) ) ) < 2
+        data(13:14) = [ '0', ...
+            num2str( mod( str2double( data(13:14) ) - 6, 24 ) ) ];
+    else
+        data(13:14) = num2str( mod( str2double( data(13:14) ) - 6, 24 ) );
+    end
+    
+    data = [ data(10:11), '-', data(6:8), '-', data(1:4), data(12:end) ];
+    
+    date_str = datenum( data );
+    
+end
 
 end
 
