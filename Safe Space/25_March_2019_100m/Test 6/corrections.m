@@ -2,7 +2,7 @@ inch_to_m = 0.0254; % m in^-1
 % number of CubeSats
 correction.nSats = 3;
 % global time correction
-correction.t = 0; % s
+correction.t = 16.178; % s
 % global boom corrections
 boom_to_VANTAGE_X = -2.5 * inch_to_m; % m
 boom_to_VANTAGE_Y = (26+1/4) * inch_to_m; % m
