@@ -184,7 +184,7 @@ switch answer
         % understandable.
         
     case 3
-        warning( 'Not supported yet.' )
+        
         fileSearch = [ path, '/*.mat' ];
         fileStruct = dir(fileSearch);
         numFiles = length(fileStruct);
@@ -194,6 +194,7 @@ switch answer
             w = warndlg( 'No correction files found' );
             waitfor(w)
             warning( [ 'No correction files found in ', path ] )
+        disp( 'Display Corrections canceled.' )
             continue
         end
         
@@ -267,30 +268,6 @@ switch answer
         legend(a7,p7,{corrections.fileName},'Location','best','Interpreter','none')
         legend(a8,p8,{corrections.fileName},'Location','best','Interpreter','none')
         
-        a1.XLabel.String = 'Test Number';
-        a1.YLabel.String = 'dt';
-        a2.XLabel.String = 'Test Number';
-        a2.YLabel.String = 'theta';
-        a3.XLabel.String = 'Test Number';
-        a3.YLabel.String = 'n_vec(1)';
-        a4.XLabel.String = 'Test Number';
-        a4.YLabel.String = 'n_vec(2)';
-        a5.XLabel.String = 'Test Number';
-        a5.YLabel.String = 'n_vec(3)';
-        a6.XLabel.String = 'Test Number';
-        a6.YLabel.String = 'offset_vec(1)';
-        a7.XLabel.String = 'Test Number';
-        a7.YLabel.String = 'offset_vec(2)';
-        a8.XLabel.String = 'Test Number';
-        a8.YLabel.String = 'offset_vec(3)';
-        a1.Title.String = 'dt';
-        a2.Title.String = 'theta';
-        a3.Title.String = 'n_vec(1)';
-        a4.Title.String = 'n_vec(2)';
-        a5.Title.String = 'n_vec(3)';
-        a6.Title.String = 'offset_vec(1)';
-        a7.Title.String = 'offset_vec(2)';
-        a8.Title.String = 'offset_vec(3)';
         a1.XLabel.Interpreter = 'none';
         a1.YLabel.Interpreter = 'none';
         a1.Title.Interpreter = 'none';
@@ -315,8 +292,34 @@ switch answer
         a8.XLabel.Interpreter = 'none';
         a8.YLabel.Interpreter = 'none';
         a8.Title.Interpreter = 'none';
+        a1.XLabel.String = 'Test Number';
+        a1.YLabel.String = 'dt';
+        a2.XLabel.String = 'Test Number';
+        a2.YLabel.String = 'theta';
+        a3.XLabel.String = 'Test Number';
+        a3.YLabel.String = 'n_vec(1)';
+        a4.XLabel.String = 'Test Number';
+        a4.YLabel.String = 'n_vec(2)';
+        a5.XLabel.String = 'Test Number';
+        a5.YLabel.String = 'n_vec(3)';
+        a6.XLabel.String = 'Test Number';
+        a6.YLabel.String = 'offset_vec(1)';
+        a7.XLabel.String = 'Test Number';
+        a7.YLabel.String = 'offset_vec(2)';
+        a8.XLabel.String = 'Test Number';
+        a8.YLabel.String = 'offset_vec(3)';
+        a1.Title.String = 'dt';
+        a2.Title.String = 'theta';
+        a3.Title.String = 'n_vec(1)';
+        a4.Title.String = 'n_vec(2)';
+        a5.Title.String = 'n_vec(3)';
+        a6.Title.String = 'offset_vec(1)';
+        a7.Title.String = 'offset_vec(2)';
+        a8.Title.String = 'offset_vec(3)';
         
         waitfor(f)
+        
+        disp( 'Display Corrections complete.' )
         
     otherwise
         disp( [ '¯\\_(', char(12471), ')_/¯ guess I''ll die...' ] )
