@@ -352,7 +352,7 @@ if strcmpi( type, '100m' )
     
     data = [ data(10:11), '-', data(6:8), '-', data(1:4), data(12:end) ];
     
-    date_str = datenum( data );
+    date_str = datestr( datenum( data ), 'dd-mmm-yyyy HH:MM:SS.FFF' );
     
 end
 

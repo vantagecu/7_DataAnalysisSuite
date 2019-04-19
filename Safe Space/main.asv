@@ -258,14 +258,14 @@ switch answer
             
         end
         
-        legend(a1,p1,{corrections.fileName},'Location','best','Interpreter','none')
-        legend(a2,p2,{corrections.fileName},'Location','best','Interpreter','none')
-        legend(a3,p3,{corrections.fileName},'Location','best','Interpreter','none')
-        legend(a4,p4,{corrections.fileName},'Location','best','Interpreter','none')
-        legend(a5,p5,{corrections.fileName},'Location','best','Interpreter','none')
-        legend(a6,p6,{corrections.fileName},'Location','best','Interpreter','none')
-        legend(a7,p7,{corrections.fileName},'Location','best','Interpreter','none')
-        legend(a8,p8,{corrections.fileName},'Location','best','Interpreter','none')
+        l1 = legend(a1,p1,{corrections.fileName});
+        legend(a2,p2,{corrections.fileName})
+        legend(a3,p3,{corrections.fileName})
+        legend(a4,p4,{corrections.fileName})
+        legend(a5,p5,{corrections.fileName})
+        legend(a6,p6,{corrections.fileName})
+        legend(a7,p7,{corrections.fileName})
+        legend(a8,p8,{corrections.fileName})
         
         a1.XLabel.String = 'Test Number';
         a1.YLabel.String = 'dt';

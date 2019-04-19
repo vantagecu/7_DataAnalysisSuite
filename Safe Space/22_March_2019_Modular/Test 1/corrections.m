@@ -55,7 +55,7 @@ X_o_b = 0; % m
 Z_o_b = 0; % m
 
 % VANTAGE (v) position from Origin (o)
-data = dir( './*Camera_Pos.csv' );
+data = dir( './*Pos.csv' );
 data = xlsread( [ './', data.name ] );
 % crop out header
 data = data(5:end,:);
